@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Payroll App</title>
+    <!-- Google Fonts: Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fa-solid fa-users-gear"></i>
+                <h1>Employee Payroll</h1>
+            </div>
+            <nav>
+                <button id="nav-home" class="nav-btn active">Home</button>
+                <button id="nav-add" class="nav-btn"><i class="fa-solid fa-plus"></i> Add Employee</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        
+        <!-- Home View -->
+        <section id="home-view" class="view active">
+            <!-- Statistics Dashboard -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-employees">0</h3>
+                        <p>Total Employees</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-payroll">₹0</h3>
+                        <p>Total Payroll</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="average-salary">₹0</h3>
+                        <p>Average Salary</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search & Filter -->
+            <div class="controls-bar">
+                <div class="search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-input" placeholder="Search by name, email, department...">
+                </div>
+                <div class="sort-wrapper">
+                    <select id="sort-select">
+                        <option value="name-asc">Name (A-Z)</option>
+                        <option value="name-desc">Name (Z-A)</option>
+                        <option value="salary-desc">Salary (High-Low)</option>
+                        <option value="salary-asc">Salary (Low-High)</option>
+                        <option value="date-desc">Newest First</option>
+                        <option value="date-asc">Oldest First</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Employee List -->
+            <div id="employee-list" class="employee-grid">
+                <!-- Employee cards will be injected here -->
+                <div class="loading-spinner">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Loading employees...
+                </div>
+            </div>
+            
+            <!-- Empty State (Hidden by default) -->
+            <div id="empty-state" class="empty-state hidden">
+                <img src="https://placehold.co/200x150/f1f5f9/94a3b8?text=No+Employees" alt="No data">
+                <h3>No employees found</h3>
+                <p>Add a new employee to get started or try a different search.</p>
+                <button id="empty-add-btn" class="btn btn-primary">Add Employee</button>
+            </div>
+        </section>
+
+        <!-- Add Employee Form View -->
+        <section id="add-view" class="view hidden">
+            <div class="form-header">
+                <h2>Add New Employee</h2>
+                <p>Fill in the details below to add a new team member.</p>
+            </div>
+            
+            <form id="add-form" class="employee-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="add-name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="add-name" name="name" placeholder="e.g. Rahul Verma" required>
+                        <small class="hint">3-30 characters, letters only</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="add-email">Email Address <span class="required">*</span></label>
+                        <input type="email" id="add-email" name="email" placeholder="e.g. rahul@company.com" required>
+                        <small class="hint">Must be unique</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="add-phone">Phone Number <span class="required">*</span></label>
+                        <input type="tel" id="add-phone" name="phone" placeholder="e.g. 9876543210" required>
+                        <small class="hint">10-15 digits</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="add-salary">Salary (₹) <span class="required">*</span></label>
+                        <input type="number" id="add-salary" name="salary" placeholder="e.g. 50000" min="15000" required>
+                        <small class="hint">Minimum ₹15,000</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="add-department">Department <span class="required">*</span></label>
+                        <select id="add-department" name="department" required>
+                            <option value="" disabled selected>Select Department</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="HR">HR</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Operations">Operations</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="add-date">Start Date <span class="required">*</span></label>
+                        <input type="date" id="add-date" name="startDate" required>
+                        <small class="hint">Cannot be in the future</small>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="add-notes">Notes (Optional)</label>
+                        <textarea id="add-notes" name="notes" rows="3" placeholder="Additional details..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary cancel-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Employee</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Edit Employee Form View -->
+        <section id="edit-view" class="view hidden">
+            <div class="form-header">
+                <h2>Edit Employee</h2>
+                <p>Update the employee details below.</p>
+            </div>
+            
+            <form id="edit-form" class="employee-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="edit-name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="edit-name" name="name" required>
+                        <small class="hint">3-30 characters, letters only</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-email">Email Address <span class="required">*</span></label>
+                        <input type="email" id="edit-email" name="email" required>
+                        <small class="hint">Must be unique</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-phone">Phone Number <span class="required">*</span></label>
+                        <input type="tel" id="edit-phone" name="phone" required>
+                        <small class="hint">10-15 digits</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-salary">Salary (₹) <span class="required">*</span></label>
+                        <input type="number" id="edit-salary" name="salary" min="15000" required>
+                        <small class="hint">Minimum ₹15,000</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-department">Department <span class="required">*</span></label>
+                        <select id="edit-department" name="department" required>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="HR">HR</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Operations">Operations</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-date">Start Date <span class="required">*</span></label>
+                        <input type="date" id="edit-date" name="startDate" required>
+                        <small class="hint">Cannot be in the future</small>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="edit-notes">Notes (Optional)</label>
+                        <textarea id="edit-notes" name="notes" rows="3"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary cancel-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Employee</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-icon warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 id="modal-title">Delete Employee?</h3>
+            <p id="modal-message">Are you sure you want to delete this employee? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
+                <button id="modal-confirm" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
